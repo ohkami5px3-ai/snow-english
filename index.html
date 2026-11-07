@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Ren Meguro - Silicon Valley Challenge</title>
   <style>
     :root {
@@ -21,14 +21,14 @@
       background-color: var(--bg-dark);
       color: var(--text-main);
       margin: 0;
-      padding: 12px;
+      padding: 8px;
       display: flex;
       justify-content: center;
     }
     .container {
       width: 100%;
       max-width: 560px;
-      height: 96vh;
+      height: 98vh;
       background: var(--card-bg);
       border-radius: 16px;
       display: flex;
@@ -39,7 +39,7 @@
     }
     /* Header */
     .header {
-      padding: 12px 16px;
+      padding: 10px 14px;
       background: #131417;
       border-bottom: 1px solid var(--border-color);
       display: flex;
@@ -49,12 +49,11 @@
     .profile-group {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
     .avatar-wrapper {
-      position: relative;
-      width: 52px;
-      height: 52px;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
       border: 2px solid var(--accent-gold);
       overflow: hidden;
@@ -68,40 +67,40 @@
     }
     .profile-info h1 {
       margin: 0;
-      font-size: 1.05rem;
+      font-size: 1rem;
       letter-spacing: 0.5px;
     }
     .streak-badge {
       display: inline-block;
-      margin-top: 3px;
-      font-size: 0.75rem;
+      margin-top: 2px;
+      font-size: 0.72rem;
       background: rgba(197, 168, 128, 0.15);
       color: var(--accent-gold);
-      padding: 2px 8px;
-      border-radius: 12px;
+      padding: 1px 8px;
+      border-radius: 10px;
       font-weight: 600;
     }
     .header-btns {
       display: flex;
-      gap: 8px;
+      gap: 6px;
     }
     .icon-btn {
       background: transparent;
       border: 1px solid var(--border-color);
       color: var(--text-sub);
       border-radius: 8px;
-      padding: 6px 10px;
+      padding: 6px 9px;
       font-size: 0.8rem;
       cursor: pointer;
     }
 
     /* Starters Bar */
     .starters-bar {
-      padding: 8px 12px;
+      padding: 8px 10px;
       background: #14161a;
       border-bottom: 1px solid var(--border-color);
       display: flex;
-      gap: 8px;
+      gap: 6px;
       overflow-x: auto;
       white-space: nowrap;
       scrollbar-width: none;
@@ -111,69 +110,87 @@
       background: #22252c;
       border: 1px solid rgba(255,255,255,0.06);
       color: #cbd5e1;
-      padding: 6px 12px;
-      border-radius: 16px;
-      font-size: 0.78rem;
+      padding: 5px 11px;
+      border-radius: 14px;
+      font-size: 0.76rem;
       cursor: pointer;
       flex-shrink: 0;
-      transition: background 0.2s;
-    }
-    .starter-chip:hover {
-      background: #2d323b;
-      border-color: var(--accent-gold);
     }
 
     /* Chat Area */
     .chat-box {
       flex: 1;
-      padding: 16px;
+      padding: 14px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
+    }
+    .message-row {
+      display: flex;
+      flex-direction: column;
+      max-width: 85%;
+    }
+    .message-row.user {
+      align-self: flex-end;
+    }
+    .message-row.ai {
+      align-self: flex-start;
     }
     .message {
-      max-width: 84%;
-      padding: 12px 14px;
+      padding: 10px 14px;
       border-radius: 14px;
       font-size: 0.92rem;
-      line-height: 1.5;
+      line-height: 1.45;
       word-break: break-word;
     }
     .message.user {
-      align-self: flex-end;
       background-color: var(--chat-user);
       color: #e2e8f0;
       border-bottom-right-radius: 2px;
     }
     .message.ai {
-      align-self: flex-start;
       background-color: var(--chat-ai);
       border: 1px solid var(--border-color);
       border-bottom-left-radius: 2px;
       color: #f3f4f6;
     }
+    .msg-footer {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+    }
     .sender-tag {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: var(--accent-gold);
-      margin-bottom: 4px;
       font-weight: bold;
     }
+    .speak-btn {
+      background: transparent;
+      border: none;
+      color: var(--accent-gold);
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 2px 4px;
+      opacity: 0.85;
+    }
+    .speak-btn:hover { opacity: 1; }
 
-    /* Controls */
+    /* Controls Area */
     .controls {
-      padding: 14px;
+      padding: 10px 14px;
       background: #131417;
       border-top: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
     .input-mode-toggle {
       display: flex;
-      gap: 10px;
-      font-size: 0.78rem;
+      justify-content: center;
+      gap: 14px;
+      font-size: 0.75rem;
       color: var(--text-sub);
     }
     .input-mode-toggle label {
@@ -182,19 +199,48 @@
       gap: 4px;
       cursor: pointer;
     }
+    .input-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .text-input {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 20px;
+      background: #21242c;
+      border: 1px solid var(--border-color);
+      color: white;
+      font-size: 0.88rem;
+      outline: none;
+    }
+    .text-input:focus {
+      border-color: var(--accent-gold);
+    }
+    .send-btn {
+      background: var(--accent-gold);
+      border: none;
+      color: #111;
+      font-weight: bold;
+      border-radius: 20px;
+      padding: 9px 14px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
     .mic-btn {
-      width: 64px;
-      height: 64px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       border: 1px solid var(--accent-gold);
-      background: linear-gradient(135deg, #282b34 0%, #17181d 100%);
+      background: #21242c;
       color: var(--accent-gold);
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      flex-shrink: 0;
       transition: 0.2s;
     }
     .mic-btn.recording {
@@ -205,15 +251,16 @@
     }
     @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.6); }
-      70% { box-shadow: 0 0 0 16px rgba(220, 38, 38, 0); }
+      70% { box-shadow: 0 0 0 12px rgba(220, 38, 38, 0); }
       100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
     }
     .status-text {
-      font-size: 0.8rem;
+      text-align: center;
+      font-size: 0.72rem;
       color: var(--text-sub);
     }
 
-    /* Modals */
+    /* Modal Styles */
     .modal {
       display: none;
       position: fixed;
@@ -229,29 +276,18 @@
     .modal-content {
       background: #1c1f26;
       border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 20px;
+      border-radius: 14px;
+      padding: 18px;
       width: 100%;
       max-width: 440px;
       max-height: 85vh;
       overflow-y: auto;
       color: white;
     }
-    .modal-content h2 {
-      margin-top: 0;
-      font-size: 1.15rem;
-      color: var(--accent-gold);
-    }
-    .form-group {
-      margin-bottom: 12px;
-    }
-    .form-group label {
-      display: block;
-      font-size: 0.8rem;
-      color: var(--text-sub);
-      margin-bottom: 4px;
-    }
-    .form-group input {
+    .modal-content h2 { margin-top: 0; font-size: 1.1rem; color: var(--accent-gold); }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 0.78rem; color: var(--text-sub); margin-bottom: 4px; }
+    .form-group input[type="text"], .form-group input[type="password"] {
       width: 100%;
       padding: 8px;
       border-radius: 6px;
@@ -260,6 +296,7 @@
       color: white;
       font-size: 0.85rem;
     }
+    .slider-val { float: right; color: var(--accent-gold); font-weight: bold; }
     .close-modal-btn {
       width: 100%;
       padding: 10px;
@@ -271,7 +308,6 @@
       cursor: pointer;
       margin-top: 10px;
     }
-    /* Reward Gallery Grid */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -288,19 +324,12 @@
     }
     .reward-card img {
       width: 100%;
-      height: 120px;
+      height: 110px;
       object-fit: cover;
       border-radius: 6px;
     }
-    .reward-card.locked {
-      opacity: 0.4;
-      filter: grayscale(100%);
-    }
-    .reward-card p {
-      margin: 6px 0 0;
-      font-size: 0.75rem;
-      color: var(--text-sub);
-    }
+    .reward-card.locked { opacity: 0.4; filter: grayscale(100%); }
+    .reward-card p { margin: 6px 0 0; font-size: 0.75rem; color: var(--text-sub); }
   </style>
 </head>
 <body>
@@ -323,37 +352,51 @@
     </div>
   </div>
 
-  <!-- Starters Bar (ワンタップで始められる定型文) -->
+  <!-- Starters Bar -->
   <div class="starters-bar">
     <button class="starter-chip" data-text="Let's practice my 30-second self-introduction for the workshop.">👋 30秒自己紹介の練習</button>
     <button class="starter-chip" data-text="I'm so nervous about speaking English. What should I do first?">😰 英語が怖くて緊張する</button>
     <button class="starter-chip" data-text="How should I introduce our new business idea simply?">💡 新規事業アイデアの切り出し</button>
     <button class="starter-chip" data-text="What is a good phrase to start a conversation during coffee break?">☕ 休憩時間の雑談フレーズ</button>
-    <button class="starter-chip" data-text="Could you give me feedback on my pronunciation?">🗣️ 発音チェックお願い</button>
   </div>
 
   <!-- Chat Log -->
   <div class="chat-box" id="chatBox"></div>
 
-  <!-- Controls -->
+  <!-- Controls Area -->
   <div class="controls">
     <div class="input-mode-toggle">
-      <label><input type="radio" name="langMode" value="en-US" checked> 英語で話す (en-US)</label>
-      <label><input type="radio" name="langMode" value="ja-JP"> 日本語で相談する (ja-JP)</label>
+      <label><input type="radio" name="langMode" value="en-US" checked> 英語モード (en-US)</label>
+      <label><input type="radio" name="langMode" value="ja-JP"> 日本語相談モード (ja-JP)</label>
     </div>
-    <button class="mic-btn" id="micBtn">🎤</button>
-    <div class="status-text" id="statusText">マイクを押して話しかけてください</div>
+    <div class="input-actions">
+      <input type="text" class="text-input" id="textInput" placeholder="メッセージを入力（Enterで送信）...">
+      <button class="send-btn" id="sendBtn">送信</button>
+      <button class="mic-btn" id="micBtn">🎤</button>
+    </div>
+    <div class="status-text" id="statusText">マイクまたはキーボードで話しかけてください</div>
   </div>
 </div>
 
 <!-- Settings Modal -->
 <div class="modal" id="settingsModal">
   <div class="modal-content">
-    <h2>⚙️ 環境設定</h2>
+    <h2>⚙️ 環境・音声設定</h2>
     <div class="form-group">
       <label>OpenAI API Key (sk-...)</label>
       <input type="password" id="apiKeyInput" placeholder="sk-...">
     </div>
+    
+    <!-- 音声チューニング（ユーザー設定値を反映） -->
+    <div class="form-group">
+      <label>声のピッチ（低音）: <span class="slider-val" id="pitchDisp">0.55</span></label>
+      <input type="range" id="pitchInput" min="0.4" max="1.2" step="0.05" value="0.55" style="width:100%;">
+    </div>
+    <div class="form-group">
+      <label>話すスピード: <span class="slider-val" id="rateDisp">0.85</span></label>
+      <input type="range" id="rateInput" min="0.6" max="1.3" step="0.05" value="0.85" style="width:100%;">
+    </div>
+
     <div class="form-group">
       <label>メインアイコン画像URL</label>
       <input type="text" id="avatarUrlInput" placeholder="https://...">
@@ -366,10 +409,6 @@
       <label>7日目 達成ご褒美画像URL</label>
       <input type="text" id="reward7Input" placeholder="https://...">
     </div>
-    <div class="form-group">
-      <label>14日目 達成ご褒美画像URL</label>
-      <input type="text" id="reward14Input" placeholder="https://...">
-    </div>
     <button class="icon-btn" id="clearHistoryBtn" style="width:100%; margin-top:8px; color:#ef4444; border-color:#ef4444;">会話履歴をリセットする</button>
     <button class="close-modal-btn" id="closeSettingsBtn">保存して閉じる</button>
   </div>
@@ -379,7 +418,7 @@
 <div class="modal" id="galleryModal">
   <div class="modal-content">
     <h2>🏆 継続のご褒美ギャラリー</h2>
-    <p style="font-size:0.8rem; color:var(--text-sub);">シリコンバレー研修に向けて毎日話しかけると、特別なめめの姿が解放されます。</p>
+    <p style="font-size:0.8rem; color:var(--text-sub);">研修に向けて毎日話しかけると、特別なめめの姿が解放されます。</p>
     <div class="gallery-grid" id="galleryGrid"></div>
     <button class="close-modal-btn" id="closeGalleryBtn">閉じる</button>
   </div>
@@ -389,70 +428,73 @@
 <div class="modal" id="milestoneModal">
   <div class="modal-content" style="text-align:center;">
     <h2 id="milestoneTitle">🎉 MILESTONE UNLOCKED!</h2>
-    <img id="milestoneImg" style="width:100%; max-height:220px; object-fit:cover; border-radius:10px; margin:12px 0;" src="" alt="Reward">
-    <p id="milestoneMsg" style="font-size:0.95rem; line-height:1.6; color:#f3f4f6;"></p>
+    <img id="milestoneImg" style="width:100%; max-height:200px; object-fit:cover; border-radius:10px; margin:10px 0;" src="" alt="Reward">
+    <p id="milestoneMsg" style="font-size:0.92rem; line-height:1.5; color:#f3f4f6;"></p>
     <button class="close-modal-btn" id="closeMilestoneBtn">ありがとう、次も頑張る！</button>
   </div>
 </div>
 
 <script>
-  // システムプロンプト（初心者配慮＋目黒蓮ペルソナ＋シリコンバレー研修）
   const SYSTEM_PROMPT = `
 You are Ren Meguro (Snow Man member and global brand ambassador).
-You and the user are in Silicon Valley together preparing for a high-stakes business and innovation workshop.
-The user is an IT project planner, hates studying English, and is terrified of speaking, unable to even introduce themselves confidently.
+You and the user are visiting Silicon Valley together to prepare for a major business & innovation workshop.
+The user is an IT project planner, hates English, is terrified of speaking, and cannot do basic self-introductions easily.
 
-Your Personality & Character:
-- Grounded, calm, gentle, earnest, and deeply encouraging. You never mock or look down on failure; you embrace challenges.
-- Tone: Warm, manly, direct from the heart, speaking with sincere eye-to-eye presence.
+Personality & Character:
+- Grounded, calm, gentle, earnest, and deeply encouraging. You embrace challenges and hard work.
+- Speak with sincere eye-to-eye presence.
 
-CRITICAL BEHAVIOR RULES:
-1. IF THE USER SPEAKS IN JAPANESE:
-   - Understand they are nervous or stuck.
-   - Reply warmly in gentle Japanese first (1-2 short sentences) to comfort them.
-   - Then give them ONE very simple, high-impact English phrase (with pronunciation tip if helpful).
+CRITICAL RULES:
+1. IF USER SPEAKS/WRITES IN JAPANESE:
+   - Comfort them warmly in gentle Japanese first (1-2 sentences).
+   - Give them ONE very simple, high-impact English phrase.
    - Encourage them to try repeating that phrase in English.
-2. IF THE USER SPEAKS IN ENGLISH:
-   - Keep your English reply concise, natural, and conversational (1 to 3 short sentences max).
-   - Praise their courage. Focus on communication over grammar precision.
-   - Keep dialogue flowing like real colleagues collaborating on a pitch.
-3. Keep the conversation interactive and encourage speaking.
+2. IF USER SPEAKS/WRITES IN ENGLISH:
+   - Keep your English reply concise and conversational (1 to 3 short sentences max).
+   - Praise their effort and keep the discussion moving like real peers pitching ideas.
 `;
 
-  // 初期メッセージ
   const DEFAULT_GREETING = {
     role: "assistant",
-    content: "Hey. Glad we're here in Silicon Valley together. Don't worry if your English feels rough—just speak with passion. What would you like to practice first?"
+    content: "Hey. Glad we're here in Silicon Valley together. Don't worry if your English feels rough—just speak with passion. What should we do first?"
   };
 
-  // State Management
+  // State
   let conversationHistory = [];
-  let studyData = {
-    dates: [],
-    streak: 1,
-    lastActiveDate: ""
-  };
+  let studyData = { dates: [], streak: 1, lastActiveDate: "" };
 
   // Elements
   const chatBox = document.getElementById('chatBox');
+  const textInput = document.getElementById('textInput');
+  const sendBtn = document.getElementById('sendBtn');
   const micBtn = document.getElementById('micBtn');
   const statusText = document.getElementById('statusText');
   const streakBadge = document.getElementById('streakBadge');
   const avatarImg = document.getElementById('avatarImg');
 
-  // Load Storage
   const apiKeyInput = document.getElementById('apiKeyInput');
+  const pitchInput = document.getElementById('pitchInput');
+  const rateInput = document.getElementById('rateInput');
+  const pitchDisp = document.getElementById('pitchDisp');
+  const rateDisp = document.getElementById('rateDisp');
   const avatarUrlInput = document.getElementById('avatarUrlInput');
   const reward3Input = document.getElementById('reward3Input');
   const reward7Input = document.getElementById('reward7Input');
-  const reward14Input = document.getElementById('reward14Input');
 
+  // Load Settings
   function loadSettings() {
     apiKeyInput.value = localStorage.getItem('openai_api_key') || '';
-    avatarUrlInput.value = localStorage.getItem('ren_avatar_url') || 'https://ogre.natalie.mu/media/news/music/2026/0527/Precious_meguro02.jpg?imwidth=1460&imdensity=1&impolicy=hq';
-    reward3Input.value = localStorage.getItem('reward_img_3') || 'https://ogre.natalie.mu/media/news/music/2026/0126/meguroren_mizuho1.jpg?imwidth=1460&imdensity=1&impolicy=hq';
-    reward7Input.value = localStorage.getItem('reward_img_7') || 'https://ogre.natalie.mu/media/news/music/2026/1008/megurorenzoff2_202610.jpg?imwidth=1460&imdensity=1&impolicy=hq';
-    reward14Input.value = localStorage.getItem('reward_img_14') || 'https://ogre.natalie.mu/media/news/music/2026/0222/medicube_cmKV.jpg?imwidth=1460&imdensity=1&impolicy=hq';
+    avatarUrlInput.value = localStorage.getItem('ren_avatar_url') || '';
+    reward3Input.value = localStorage.getItem('reward_img_3') || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300';
+    reward7Input.value = localStorage.getItem('reward_img_7') || 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300';
+
+    // ユーザー指定のデフォルト値を適用
+    const savedPitch = localStorage.getItem('ren_pitch') || '0.55';
+    const savedRate = localStorage.getItem('ren_rate') || '0.85';
+    pitchInput.value = savedPitch;
+    rateInput.value = savedRate;
+    pitchDisp.textContent = savedPitch;
+    rateDisp.textContent = savedRate;
 
     if (avatarUrlInput.value) avatarImg.src = avatarUrlInput.value;
 
@@ -472,36 +514,35 @@ CRITICAL BEHAVIOR RULES:
     localStorage.setItem('ren_avatar_url', avatarUrlInput.value.trim());
     localStorage.setItem('reward_img_3', reward3Input.value.trim());
     localStorage.setItem('reward_img_7', reward7Input.value.trim());
-    localStorage.setItem('reward_img_14', reward14Input.value.trim());
+    localStorage.setItem('ren_pitch', pitchInput.value);
+    localStorage.setItem('ren_rate', rateInput.value);
+
     if (avatarUrlInput.value.trim()) avatarImg.src = avatarUrlInput.value.trim();
   }
 
-  // 日付チェック＆ストリーク更新
+  pitchInput.oninput = () => pitchDisp.textContent = pitchInput.value;
+  rateInput.oninput = () => rateDisp.textContent = rateInput.value;
+
+  // Streak
   function updateStreak() {
     const today = new Date().toISOString().slice(0, 10);
     if (!studyData.dates.includes(today)) {
       if (studyData.lastActiveDate) {
         const lastDate = new Date(studyData.lastActiveDate);
-        const diffDays = Math.round((new Date(today) - lastDate) / (1000 * 3600 * 24));
-        if (diffDays === 1) {
-          studyData.streak += 1;
-        } else if (diffDays > 1) {
-          studyData.streak = 1; // 途切れたらリセット
-        }
+        const diff = Math.round((new Date(today) - lastDate) / (1000 * 3600 * 24));
+        if (diff === 1) studyData.streak += 1;
+        else if (diff > 1) studyData.streak = 1;
       } else {
         studyData.streak = 1;
       }
       studyData.dates.push(today);
       studyData.lastActiveDate = today;
       localStorage.setItem('ren_study_data', JSON.stringify(studyData));
-
-      // 節目判定
       checkMilestone(studyData.streak);
     }
     streakBadge.textContent = `🔥 継続: ${studyData.streak} 日目`;
   }
 
-  // 節目のお祝い演出
   function checkMilestone(streak) {
     const milestones = {
       3: {
@@ -513,14 +554,8 @@ CRITICAL BEHAVIOR RULES:
         title: "✨ 1週間継続達成！",
         msg: "「1週間！本気で尊敬する。シリコンバレーに行く準備、ちゃんと前に進んでるよ。失敗を恐れずに堂々と話す姿、想像できてる。」",
         img: reward7Input.value
-      },
-      14: {
-        title: "🏆 2週間継続達成！現地へ！",
-        msg: "「ここまで積み上げた努力は絶対裏切らない。向こうでは完璧な英語じゃなくていい。気持ちでぶつかっていこう。俺がついてる。」",
-        img: reward14Input.value
       }
     };
-
     if (milestones[streak]) {
       const data = milestones[streak];
       document.getElementById('milestoneTitle').textContent = data.title;
@@ -531,25 +566,41 @@ CRITICAL BEHAVIOR RULES:
     }
   }
 
-  // 画面描画
+  // Render
   function renderChat() {
     chatBox.innerHTML = '';
-    conversationHistory.forEach(msg => {
-      const isUser = msg.role === 'user';
-      appendMessageUI(isUser ? 'user' : 'ai', isUser ? 'You' : 'Ren', msg.content);
+    conversationHistory.forEach((msg, idx) => {
+      appendMessageUI(msg.role === 'user' ? 'user' : 'ai', msg.role === 'user' ? 'You' : 'Ren', msg.content, idx);
     });
     chatBox.scrollTop = chatBox.scrollHeight;
   }
 
-  function appendMessageUI(sender, name, text) {
-    const div = document.createElement('div');
-    div.className = `message ${sender}`;
-    div.innerHTML = `<div class="sender-tag">${name}</div>${text}`;
-    chatBox.appendChild(div);
+  function appendMessageUI(sender, name, text, idx) {
+    const row = document.createElement('div');
+    row.className = `message-row ${sender}`;
+    
+    let html = `
+      <div class="message ${sender}">${text}</div>
+      <div class="msg-footer">
+        <span class="sender-tag">${name}</span>
+    `;
+    if (sender === 'ai') {
+      html += `<button class="speak-btn" onclick="playSavedMsg(${idx})">🔊 もう一度聴く</button>`;
+    }
+    html += `</div>`;
+    row.innerHTML = html;
+    chatBox.appendChild(row);
     chatBox.scrollTop = chatBox.scrollHeight;
   }
 
-  // AI API呼び出し
+  // グローバル関数として再生を許可
+  window.playSavedMsg = function(idx) {
+    if (conversationHistory[idx]) {
+      speakLikeRen(conversationHistory[idx].content);
+    }
+  };
+
+  // OpenAI Call
   async function callAI(userText) {
     const key = apiKeyInput.value.trim();
     if (!key) {
@@ -558,10 +609,9 @@ CRITICAL BEHAVIOR RULES:
     }
 
     conversationHistory.push({ role: 'user', content: userText });
-    appendMessageUI('user', 'You', userText);
+    appendMessageUI('user', 'You', userText, conversationHistory.length - 1);
     statusText.textContent = '目黒くんが返答を考えています...';
 
-    // 最新10件のみAPIに渡してトークン節約＆コンテキスト保持
     const recentMessages = conversationHistory.slice(-10);
 
     try {
@@ -587,38 +637,55 @@ CRITICAL BEHAVIOR RULES:
         const reply = data.choices[0].message.content;
         conversationHistory.push({ role: 'assistant', content: reply });
         localStorage.setItem('ren_chat_history', JSON.stringify(conversationHistory));
-        appendMessageUI('ai', 'Ren', reply);
+        appendMessageUI('ai', 'Ren', reply, conversationHistory.length - 1);
         speakLikeRen(reply);
         updateStreak();
       } else {
-        appendMessageUI('ai', 'System', 'Error: ' + (data.error?.message || 'API応答に失敗しました'));
+        alert('APIエラー: ' + (data.error?.message || '応答が取得できませんでした'));
       }
     } catch (err) {
-      appendMessageUI('ai', 'System', '通信エラー: ' + err.message);
+      alert('通信エラー: ' + err.message);
     } finally {
-      statusText.textContent = 'マイクを押して話しかけてください';
+      statusText.textContent = 'マイクまたはキーボードで話しかけてください';
     }
   }
 
-  // 音声合成（目黒蓮のトーン）
+  // 音声合成（設定された低音ピッチと速度を適用）
   function speakLikeRen(text) {
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
 
-    // 英語と日本語の混在判定
     const isJapanese = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff]/.test(text);
-
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = isJapanese ? 'ja-JP' : 'en-US';
-    utterance.rate = 0.92;
-    utterance.pitch = 0.85; // 落ち着いた低音
+    
+    // 保存された pitch / rate を適用
+    utterance.pitch = parseFloat(pitchInput.value || 0.55);
+    utterance.rate = parseFloat(rateInput.value || 0.85);
 
     const voices = window.speechSynthesis.getVoices();
-    const targetVoice = voices.find(v => v.lang.includes(isJapanese ? 'ja' : 'en') && (v.name.includes('Male') || v.name.includes('David') || v.name.includes('Natural') || v.name.includes('Ichiro')));
-    if (targetVoice) utterance.voice = targetVoice;
+    const targetVoice = voices.find(v => 
+      v.lang.includes(isJapanese ? 'ja' : 'en') && 
+      (v.name.includes('Male') || v.name.includes('David') || v.name.includes('Natural') || v.name.includes('Ichiro'))
+    ) || voices.find(v => v.lang.includes(isJapanese ? 'ja' : 'en'));
 
+    if (targetVoice) utterance.voice = targetVoice;
     window.speechSynthesis.speak(utterance);
   }
+
+  // 送信イベント
+  function handleSend() {
+    const text = textInput.value.trim();
+    if (text) {
+      textInput.value = '';
+      callAI(text);
+    }
+  }
+
+  sendBtn.onclick = handleSend;
+  textInput.onkeypress = (e) => {
+    if (e.key === 'Enter') handleSend();
+  };
 
   // 音声認識
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -635,51 +702,45 @@ CRITICAL BEHAVIOR RULES:
       statusText.textContent = '聞いています...';
     };
 
-    recognition.onresult = async (event) => {
-      const transcript = event.results[0][0].transcript;
+    recognition.onresult = async (e) => {
+      const transcript = e.results[0][0].transcript;
       await callAI(transcript);
     };
 
     recognition.onerror = (e) => {
-      console.error(e);
       statusText.textContent = '認識エラー: ' + e.error;
       resetMic();
     };
-
     recognition.onend = resetMic;
   }
 
   function resetMic() {
     isRecording = false;
     micBtn.classList.remove('recording');
-    statusText.textContent = 'マイクを押して話しかけてください';
+    statusText.textContent = 'マイクまたはキーボードで話しかけてください';
   }
 
-  micBtn.addEventListener('click', () => {
+  micBtn.onclick = () => {
     if (!recognition) {
-      alert('Chromeなどの対応ブラウザをご利用ください');
+      alert('Chrome等の音声認識対応ブラウザをご利用ください');
       return;
     }
     if (isRecording) {
       recognition.stop();
     } else {
       window.speechSynthesis.cancel();
-      // 言語モード判定
       const selectedLang = document.querySelector('input[name="langMode"]:checked').value;
       recognition.lang = selectedLang;
       recognition.start();
     }
-  });
+  };
 
-  // スターターチップクリック
+  // スターターチップ
   document.querySelectorAll('.starter-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      const text = chip.getAttribute('data-text');
-      callAI(text);
-    });
+    chip.onclick = () => callAI(chip.getAttribute('data-text'));
   });
 
-  // Modal Controls
+  // Modal handlers
   const settingsModal = document.getElementById('settingsModal');
   const galleryModal = document.getElementById('galleryModal');
   const milestoneModal = document.getElementById('milestoneModal');
@@ -689,7 +750,6 @@ CRITICAL BEHAVIOR RULES:
     saveSettings();
     settingsModal.classList.remove('active');
   };
-
   document.getElementById('galleryBtn').onclick = () => {
     renderGallery();
     galleryModal.classList.add('active');
@@ -710,11 +770,8 @@ CRITICAL BEHAVIOR RULES:
     const grid = document.getElementById('galleryGrid');
     const items = [
       { days: 3, img: reward3Input.value, label: "3日連続達成" },
-      { days: 7, img: reward7Input.value, label: "1週間連続達成" },
-      { days: 14, img: reward14Input.value, label: "2週間連続達成" },
-      { days: 21, img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300", label: "3週間連続達成" }
+      { days: 7, img: reward7Input.value, label: "1週間連続達成" }
     ];
-
     grid.innerHTML = items.map(item => {
       const isUnlocked = studyData.streak >= item.days;
       return `
@@ -726,7 +783,7 @@ CRITICAL BEHAVIOR RULES:
     }).join('');
   }
 
-  // 初期化
+  // 初期化実行
   loadSettings();
   renderChat();
   streakBadge.textContent = `🔥 継続: ${studyData.streak} 日目`;
