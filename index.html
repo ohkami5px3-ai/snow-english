@@ -11,9 +11,9 @@
       --accent-gold: #c5a880;
       --text-main: #f3f4f6;
       --text-sub: #9ca3af;
-      --chat-user: #2d3748;
-      --chat-ai: #1f2937;
-      --border-color: rgba(255, 255, 255, 0.08);
+      --chat-user: rgba(45, 55, 72, 0.88);
+      --chat-ai: rgba(31, 41, 55, 0.88);
+      --border-color: rgba(255, 255, 255, 0.12);
     }
     * { box-sizing: border-box; }
     body {
@@ -45,6 +45,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      z-index: 2;
     }
     .profile-group {
       display: flex;
@@ -104,6 +105,7 @@
       overflow-x: auto;
       white-space: nowrap;
       scrollbar-width: none;
+      z-index: 2;
     }
     .starters-bar::-webkit-scrollbar { display: none; }
     .starter-chip {
@@ -117,7 +119,7 @@
       flex-shrink: 0;
     }
 
-    /* Chat Area */
+    /* Chat Area (背景画像と透過レイヤー) */
     .chat-box {
       flex: 1;
       padding: 14px;
@@ -125,11 +127,26 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
+      position: relative;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
     }
+    /* 背景画像を暗くして可読性を保つオーバーレイ */
+    .chat-box::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 16, 18, 0.72);
+      backdrop-filter: blur(2px);
+      z-index: 0;
+    }
+
     .message-row {
       display: flex;
       flex-direction: column;
       max-width: 85%;
+      z-index: 1;
     }
     .message-row.user {
       align-self: flex-end;
@@ -143,11 +160,14 @@
       font-size: 0.92rem;
       line-height: 1.45;
       word-break: break-word;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
     .message.user {
       background-color: var(--chat-user);
       color: #e2e8f0;
       border-bottom-right-radius: 2px;
+      border: 1px solid rgba(255,255,255,0.08);
     }
     .message.ai {
       background-color: var(--chat-ai);
@@ -173,9 +193,8 @@
       cursor: pointer;
       font-size: 0.85rem;
       padding: 2px 4px;
-      opacity: 0.85;
+      opacity: 0.9;
     }
-    .speak-btn:hover { opacity: 1; }
 
     /* Controls Area */
     .controls {
@@ -185,6 +204,7 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+      z-index: 2;
     }
     .input-mode-toggle {
       display: flex;
@@ -360,7 +380,7 @@
     <button class="starter-chip" data-text="What is a good phrase to start a conversation during coffee break?">☕ 休憩時間の雑談フレーズ</button>
   </div>
 
-  <!-- Chat Log -->
+  <!-- Chat Log (背景画像表示領域) -->
   <div class="chat-box" id="chatBox"></div>
 
   <!-- Controls Area -->
@@ -381,13 +401,19 @@
 <!-- Settings Modal -->
 <div class="modal" id="settingsModal">
   <div class="modal-content">
-    <h2>⚙️ 環境・音声設定</h2>
+    <h2>⚙️ 環境・表示設定</h2>
     <div class="form-group">
       <label>OpenAI API Key (sk-...)</label>
       <input type="password" id="apiKeyInput" placeholder="sk-...">
     </div>
     
-    <!-- 音声チューニング（ユーザー設定値を反映） -->
+    <!-- チャット背景画像設定 -->
+    <div class="form-group">
+      <label>チャット背景画像URL</label>
+      <input type="text" id="bgUrlInput" placeholder="https://...（推しのお気に入り画像リンク）">
+    </div>
+
+    <!-- 音声チューニング -->
     <div class="form-group">
       <label>声のピッチ（低音）: <span class="slider-val" id="pitchDisp">0.55</span></label>
       <input type="range" id="pitchInput" min="0.4" max="1.2" step="0.05" value="0.55" style="width:100%;">
@@ -473,6 +499,7 @@ CRITICAL RULES:
   const avatarImg = document.getElementById('avatarImg');
 
   const apiKeyInput = document.getElementById('apiKeyInput');
+  const bgUrlInput = document.getElementById('bgUrlInput');
   const pitchInput = document.getElementById('pitchInput');
   const rateInput = document.getElementById('rateInput');
   const pitchDisp = document.getElementById('pitchDisp');
@@ -488,13 +515,17 @@ CRITICAL RULES:
     reward3Input.value = localStorage.getItem('reward_img_3') || 'https://ogre.natalie.mu/media/news/music/2026/0526/kikkoman_meguro01.jpg?imwidth=1460&imdensity=1&impolicy=hq';
     reward7Input.value = localStorage.getItem('reward_img_7') || 'https://ogre.natalie.mu/media/news/music/2026/0517/kirin_cm02.jpg?imwidth=1460&imdensity=1&impolicy=hq';
 
-    // ユーザー指定のデフォルト値を適用
     const savedPitch = localStorage.getItem('ren_pitch') || '0.55';
     const savedRate = localStorage.getItem('ren_rate') || '0.85';
     pitchInput.value = savedPitch;
     rateInput.value = savedRate;
     pitchDisp.textContent = savedPitch;
     rateDisp.textContent = savedRate;
+
+    // 背景画像のロードと反映
+    const savedBg = localStorage.getItem('ren_bg_url') || 'https://ogre.natalie.mu/media/news/music/2025/0717/FENDI_25AW_2.jpg?imwidth=1460&imdensity=1&impolicy=hq';
+    bgUrlInput.value = savedBg;
+    applyBackground(savedBg);
 
     if (avatarUrlInput.value) avatarImg.src = avatarUrlInput.value;
 
@@ -509,14 +540,24 @@ CRITICAL RULES:
     }
   }
 
+  function applyBackground(url) {
+    if (url) {
+      chatBox.style.backgroundImage = `url('${url}')`;
+    } else {
+      chatBox.style.backgroundImage = 'none';
+    }
+  }
+
   function saveSettings() {
     localStorage.setItem('openai_api_key', apiKeyInput.value.trim());
     localStorage.setItem('ren_avatar_url', avatarUrlInput.value.trim());
+    localStorage.setItem('ren_bg_url', bgUrlInput.value.trim());
     localStorage.setItem('reward_img_3', reward3Input.value.trim());
     localStorage.setItem('reward_img_7', reward7Input.value.trim());
     localStorage.setItem('ren_pitch', pitchInput.value);
     localStorage.setItem('ren_rate', rateInput.value);
 
+    applyBackground(bgUrlInput.value.trim());
     if (avatarUrlInput.value.trim()) avatarImg.src = avatarUrlInput.value.trim();
   }
 
@@ -593,7 +634,6 @@ CRITICAL RULES:
     chatBox.scrollTop = chatBox.scrollHeight;
   }
 
-  // グローバル関数として再生を許可
   window.playSavedMsg = function(idx) {
     if (conversationHistory[idx]) {
       speakLikeRen(conversationHistory[idx].content);
@@ -650,7 +690,7 @@ CRITICAL RULES:
     }
   }
 
-  // 音声合成（設定された低音ピッチと速度を適用）
+  // 音声合成
   function speakLikeRen(text) {
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
@@ -659,7 +699,6 @@ CRITICAL RULES:
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = isJapanese ? 'ja-JP' : 'en-US';
     
-    // 保存された pitch / rate を適用
     utterance.pitch = parseFloat(pitchInput.value || 0.55);
     utterance.rate = parseFloat(rateInput.value || 0.85);
 
