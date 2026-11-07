@@ -449,10 +449,10 @@ CRITICAL BEHAVIOR RULES:
 
   function loadSettings() {
     apiKeyInput.value = localStorage.getItem('openai_api_key') || '';
-    avatarUrlInput.value = localStorage.getItem('ren_avatar_url') || '';
-    reward3Input.value = localStorage.getItem('reward_img_3') || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300';
-    reward7Input.value = localStorage.getItem('reward_img_7') || 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300';
-    reward14Input.value = localStorage.getItem('reward_img_14') || 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=300';
+    avatarUrlInput.value = localStorage.getItem('ren_avatar_url') || 'https://ogre.natalie.mu/media/news/music/2026/0527/Precious_meguro02.jpg?imwidth=1460&imdensity=1&impolicy=hq';
+    reward3Input.value = localStorage.getItem('reward_img_3') || 'https://ogre.natalie.mu/media/news/music/2026/0126/meguroren_mizuho1.jpg?imwidth=1460&imdensity=1&impolicy=hq';
+    reward7Input.value = localStorage.getItem('reward_img_7') || 'https://ogre.natalie.mu/media/news/music/2026/1008/megurorenzoff2_202610.jpg?imwidth=1460&imdensity=1&impolicy=hq';
+    reward14Input.value = localStorage.getItem('reward_img_14') || 'https://ogre.natalie.mu/media/news/music/2026/0222/medicube_cmKV.jpg?imwidth=1460&imdensity=1&impolicy=hq';
 
     if (avatarUrlInput.value) avatarImg.src = avatarUrlInput.value;
 
