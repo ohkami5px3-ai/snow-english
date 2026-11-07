@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Snow Man 瞬間英作文 - Ren Meguro Edition</title>
+  <style>
+    :root {
+      --bg-dark: #0f1012;
+      --card-bg: #181a1f;
+      --accent-gold: #c5a880;
+      --text-main: #f3f4f6;
+      --text-sub: #9ca3af;
+      --border-color: rgba(255, 255, 255, 0.12);
+      --correct-green: #22c55e;
+      --wrong-red: #ef4444;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      margin: 0;
+      padding: 8px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 540px;
+      height: 98vh;
+      background: var(--card-bg);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      position: relative;
+    }
+    /* Header */
+    .header {
+      padding: 10px 14px;
+      background: #131417;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 2;
+    }
+    .nav-link {
+      color: var(--accent-gold);
+      text-decoration: none;
+      font-size: 0.8rem;
+      border: 1px solid var(--accent-gold);
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+    .title-group h1 {
+      margin: 0;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+    }
+    .score-badge {
+      font-size: 0.72rem;
+      color: var(--accent-gold);
+    }
+
+    /* Main Area (背景画像と透過) */
+    .main-area {
+      flex: 1;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      background-size: cover;
+      background-position: center;
+    }
+    .main-area::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 16, 18, 0.75);
+      backdrop-filter: blur(3px);
+      z-index: 0;
+    }
+    .card-content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Timer Progress Bar */
+    .timer-container {
+      width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .timer-bar {
+      height: 100%;
+      width: 100%;
+      background: var(--accent-gold);
+      transition: width 0.1s linear;
+    }
+
+    /* Flashcard */
+    .flashcard {
+      width: 100%;
+      background: rgba(28, 31, 38, 0.9);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 24px 18px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      min-height: 170px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .card-category {
+      font-size: 0.75rem;
+      color: var(--accent-gold);
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    .japanese-text {
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1.5;
+      color: #ffffff;
+    }
+
+    /* Feedback Box */
+    .feedback-box {
+      width: 100%;
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 12px;
+      text-align: center;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .feedback-box.correct {
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid var(--correct-green);
+    }
+    .feedback-box.wrong {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--wrong-red);
+    }
+    .result-status {
+      font-weight: bold;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+    .feedback-box.correct .result-status { color: var(--correct-green); }
+    .feedback-box.wrong .result-status { color: var(--wrong-red); }
+    .recognized-text {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+    .correct-answer {
+      font-size: 0.95rem;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Controls Area */
+    .controls {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .time-selector {
+      display: flex;
+      gap: 8px;
+      font-size: 0.75rem;
+      color: var(--text-sub);
+    }
+    .time-chip {
+      background: #22252c;
+      border: 1px solid var(--border-color);
+      color: var(--text-sub);
+      padding: 3px 8px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .time-chip.active {
+      background: var(--accent-gold);
+      color: #111;
+      font-weight: bold;
+    }
+    .mic-btn {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 1px solid var(--accent-gold);
+      background: #21242c;
+      color: var(--accent-gold);
+      font-size: 1.6rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      transition: 0.2s;
+    }
+    .mic-btn.recording {
+      background: #dc2626;
+      color: white;
+      border-color: #ef4444;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.6); }
+      70% { box-shadow: 0 0 0 14px rgba(220, 38, 38, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+    }
+    .action-btn {
+      width: 100%;
+      max-width: 280px;
+      padding: 12px;
+      background: var(--accent-gold);
+      color: #111;
+      font-weight: bold;
+      border: none;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <a href="index.html" class="nav-link">💬 AI英会話へ戻る</a>
+    <div class="title-group">
+      <h1>瞬間英作文 Drill</h1>
+    </div>
+    <div class="score-badge" id="scoreDisplay">スコア: 0 / 0</div>
+  </div>
+
+  <!-- Main Flashcard Area -->
+  <div class="main-area" id="mainArea">
+    <div class="card-content">
+      <div class="timer-container">
+        <div class="timer-bar" id="timerBar"></div>
+      </div>
+
+      <div class="flashcard">
+        <div class="card-category" id="cardCategory">CATEGORY: SNOW MAN & SV</div>
+        <div class="japanese-text" id="japaneseText">スタートボタンを押してください</div>
+      </div>
+
+      <div class="feedback-box" id="feedbackBox">
+        <div class="result-status" id="resultStatus">NICE! 正解！</div>
+        <div class="recognized-text" id="recognizedText">あなたの発声: "..."</div>
+        <div class="correct-answer" id="correctAnswer">模範解答: ...</div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <div class="time-selector">
+        <span>制限時間:</span>
+        <span class="time-chip" data-sec="3">3秒（鬼）</span>
+        <span class="time-chip active" data-sec="5">5秒（推奨）</span>
+        <span class="time-chip" data-sec="8">8秒（じっくり）</span>
+      </div>
+
+      <button class="mic-btn" id="micBtn">🎤</button>
+      <div id="statusText" style="font-size:0.75rem; color:var(--text-sub);">マイクを押してスタート</div>
+      <button class="action-btn" id="nextBtn">次の問題へ (Next)</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 厳選例文リスト（スノ担ネタ × シリコンバレーで通じる骨太構文）
+  const QUESTION_BANK = [
+    {
+      cat: "MEMBER & CHARACTER",
+      ja: "彼はアクロバットが得意です。",
+      en: ["He is good at acrobatics.", "He is great at acrobatics."]
+    },
+    {
+      cat: "ROYAL & ELEGANT",
+      ja: "舘様はロイヤルな雰囲気を漂わせています。",
+      en: ["Date-sama has a royal vibe.", "Ryota has a royal vibe.", "Date-sama has a royal atmosphere."]
+    },
+    {
+      cat: "CONCERT & LIVE",
+      ja: "次のドームツアーのチケットが取れませんでした。",
+      en: ["I couldn't get tickets for their next dome tour.", "I failed to get tickets for their next dome tour."]
+    },
+    {
+      cat: "GLOBAL & MILAN",
+      ja: "めめはミラノのファッションショーに行きました。",
+      en: ["Meme went to the fashion show in Milan.", "Ren went to the fashion show in Milan."]
+    },
+    {
+      cat: "FITNESS & LEADER",
+      ja: "岩本くんは筋トレが大好きです。",
+      en: ["Hikaru loves working out.", "Hikaru loves muscle training."]
+    },
+    {
+      cat: "INTELLECT & WEATHER",
+      ja: "あべちゃんは気象予報士の資格を持っています。",
+      en: ["Abe-chan has a weather forecaster license.", "Ryohei has a weather forecaster license."]
+    },
+    {
+      cat: "ENERGY & ANIME",
+      ja: "佐久間くんはアニメについて熱く語ることができます。",
+      en: ["Sakuma can talk passionately about anime.", "Daisuke can talk passionately about anime."]
+    },
+    {
+      cat: "VARIETY & MC",
+      ja: "ふっかはいつもメンバーを笑顔にします。",
+      en: ["Fukka always makes the members smile.", "Tatsuya always makes the members smile."]
+    },
+    {
+      cat: "PERFORMANCE",
+      ja: "この新曲のダンスはとても難しそうです。",
+      en: ["The dance for this new song looks very difficult.", "This new song's dance looks very hard."]
+    },
+    {
+      cat: "YOUTUBE LIFE",
+      ja: "私たちは毎週水曜日にYouTubeを見ます。",
+      en: ["We watch YouTube every Wednesday.", "We check YouTube every Wednesday."]
+    },
+    {
+      cat: "SILICON VALLEY MIND",
+      ja: "失敗を恐れずに挑戦することが大切です。",
+      en: ["It is important to take on challenges without fearing failure.", "It is important to try without fear of failure."]
+    },
+    {
+      cat: "INNOVATION & BUSINESS",
+      ja: "私は新しいビジネスのアイデアをピッチしたいです。",
+      en: ["I want to pitch a new business idea.", "I'd like to pitch a new business idea."]
+    },
+    {
+      cat: "NETWORKING",
+      ja: "あなたのプロジェクトについてもっと教えていただけますか？",
+      en: ["Could you tell me more about your project?", "Can you tell me more about your project?"]
+    },
+    {
+      cat: "TEAM SPIRIT",
+      ja: "Snow Manは9人でドームに立っています。",
+      en: ["Snow Man stands in the dome with nine members.", "Snow Man performs in the dome with nine members."]
+    },
+    {
+      cat: "PASSION & GOAL",
+      ja: "私たちは世界中のファンを幸せにしたいです。",
+      en: ["We want to make fans all over the world happy.", "We want to make fans happy worldwide."]
+    }
+  ];
+
+  // State
+  let currentQuestions = [...QUESTION_BANK];
+  let currentIndex = 0;
+  let timeLimit = 5; // デフォルト5秒
+  let timerInterval = null;
+  let timeLeft = 0;
+  let isAnswering = false;
+  let scoreCorrect = 0;
+  let scoreTotal = 0;
+
+  // Elements
+  const mainArea = document.getElementById('mainArea');
+  const timerBar = document.getElementById('timerBar');
+  const cardCategory = document.getElementById('cardCategory');
+  const japaneseText = document.getElementById('japaneseText');
+  const feedbackBox = document.getElementById('feedbackBox');
+  const resultStatus = document.getElementById('resultStatus');
+  const recognizedText = document.getElementById('recognizedText');
+  const correctAnswer = document.getElementById('correctAnswer');
+  const micBtn = document.getElementById('micBtn');
+  const statusText = document.getElementById('statusText');
+  const nextBtn = document.getElementById('nextBtn');
+  const scoreDisplay = document.getElementById('scoreDisplay');
+
+  // 音声認識（Web Speech API）
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let recognition = null;
+  if (SpeechRecognition) {
+    recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    
+    recognition.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      checkAnswer(transcript);
+    };
+
+    recognition.onerror = (e) => {
+      console.log('認識エラー:', e.error);
+    };
+
+    recognition.onend = () => {
+      if (isAnswering && timeLeft > 0) {
+        try { recognition.start(); } catch(err){}
+      }
+    };
+  }
+
+  // 背景画像・音声設定を前作のLocalStorageから同期
+  function syncSettings() {
+    const savedBg = localStorage.getItem('ren_bg_url');
+    if (savedBg) mainArea.style.backgroundImage = `url('${savedBg}')`;
+  }
+
+  // タイムリミット選択
+  document.querySelectorAll('.time-chip').forEach(chip => {
+    chip.onclick = () => {
+      document.querySelectorAll('.time-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      timeLimit = parseInt(chip.getAttribute('data-sec'));
+    };
+  });
+
+  // 問題開始
+  function startQuestion() {
+    feedbackBox.style.display = 'none';
+    nextBtn.style.display = 'none';
+    micBtn.style.display = 'flex';
+    micBtn.classList.add('recording');
+    isAnswering = true;
+
+    // シャッフル
+    if (currentIndex >= currentQuestions.length) {
+      currentQuestions = QUESTION_BANK.sort(() => Math.random() - 0.5);
+      currentIndex = 0;
+    }
+
+    const q = currentQuestions[currentIndex];
+    cardCategory.textContent = `CATEGORY: ${q.cat}`;
+    japaneseText.textContent = q.ja;
+    statusText.textContent = '英語を発声してください！';
+
+    // 音声認識スタート
+    try {
+      window.speechSynthesis.cancel();
+      if (recognition) recognition.start();
+    } catch(e){}
+
+    // タイマースタート
+    timeLeft = timeLimit;
+    timerBar.style.width = '100%';
+    const stepTime = 100; // 0.1秒刻み
+    const decrement = (stepTime / (timeLimit * 1000)) * 100;
+    let currentWidth = 100;
+
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      currentWidth -= decrement;
+      timerBar.style.width = `${Math.max(0, currentWidth)}%`;
+      timeLeft -= stepTime / 1000;
+
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        handleTimeout();
+      }
+    }, stepTime);
+  }
+
+  // 時間切れ処理
+  function handleTimeout() {
+    if (!isAnswering) return;
+    isAnswering = false;
+    stopMic();
+
+    scoreTotal++;
+    updateScore();
+
+    const q = currentQuestions[currentIndex];
+    showFeedback(false, "時間切れ (Time's up!)", q.en[0]);
+    speakRenFeedback(false, q.en[0]);
+  }
+
+  // 判定ロジック（記号や空白を除去して寛容判定）
+  function cleanStr(s) {
+    return s.toLowerCase().replace(/[^a-z0-9]/g, '');
+  }
+
+  function checkAnswer(userSpeech) {
+    if (!isAnswering) return;
+    isAnswering = false;
+    clearInterval(timerInterval);
+    stopMic();
+
+    scoreTotal++;
+    const q = currentQuestions[currentIndex];
+    const userClean = cleanStr(userSpeech);
+
+    const isMatch = q.en.some(ans => {
+      const targetClean = cleanStr(ans);
+      return userClean === targetClean || userClean.includes(targetClean) || targetClean.includes(userClean);
+    });
+
+    if (isMatch) scoreCorrect++;
+    updateScore();
+
+    showFeedback(isMatch, userSpeech, q.en[0]);
+    speakRenFeedback(isMatch, q.en[0]);
+  }
+
+  function stopMic() {
+    micBtn.classList.remove('recording');
+    try { if (recognition) recognition.stop(); } catch(e){}
+  }
+
+  function showFeedback(isCorrect, userText, modelAnswer) {
+    feedbackBox.className = `feedback-box ${isCorrect ? 'correct' : 'wrong'}`;
+    resultStatus.textContent = isCorrect ? '🎉 NICE! 正解！' : '惜しい！ (Keep Going!)';
+    recognizedText.textContent = `あなたの発声: "${userText}"`;
+    correctAnswer.textContent = `模範解答: ${modelAnswer}`;
+    feedbackBox.style.display = 'block';
+
+    micBtn.style.display = 'none';
+    nextBtn.style.display = 'block';
+    statusText.textContent = '次の問題へ進んでください';
+  }
+
+  function updateScore() {
+    scoreDisplay.textContent = `スコア: ${scoreCorrect} / ${scoreTotal}`;
+  }
+
+  // めめの音声フィードバック（前作の設定ピッチ＆速度を完全継承）
+  function speakRenFeedback(isCorrect, modelAns) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+
+    const pitchEn = parseFloat(localStorage.getItem('ren_pitch_en') || '0.55');
+    const rateEn = parseFloat(localStorage.getItem('ren_rate_en') || '0.85');
+    const voiceUri = localStorage.getItem('ren_voice_en_uri');
+
+    const praiseLines = ["Nice!", "Great job!", "That's right!"];
+    const retryLines = ["Don't worry.", "Close! Let's say:"];
+    
+    const prefix = isCorrect 
+      ? praiseLines[Math.floor(Math.random() * praiseLines.length)]
+      : retryLines[Math.floor(Math.random() * retryLines.length)];
+
+    const fullUtterance = `${prefix} ${modelAns}`;
+
+    const u = new SpeechSynthesisUtterance(fullUtterance);
+    u.lang = 'en-US';
+    u.pitch = pitchEn;
+    u.rate = rateEn;
+
+    const voices = window.speechSynthesis.getVoices();
+    if (voiceUri) {
+      const selectedVoice = voices.find(v => v.voiceURI === voiceUri);
+      if (selectedVoice) u.voice = selectedVoice;
+    }
+
+    window.speechSynthesis.speak(u);
+  }
+
+  // ボタンイベント
+  micBtn.onclick = () => {
+    if (!isAnswering) startQuestion();
+  };
+
+  nextBtn.onclick = () => {
+    currentIndex++;
+    startQuestion();
+  };
+
+  // 初期化
+  syncSettings();
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  }
+</script>
+</body>
+</html>
