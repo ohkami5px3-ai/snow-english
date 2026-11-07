@@ -37,7 +37,6 @@
       border: 1px solid var(--border-color);
       overflow: hidden;
     }
-    /* Header */
     .header {
       padding: 10px 14px;
       background: #131417;
@@ -95,7 +94,6 @@
       cursor: pointer;
     }
 
-    /* Starters Bar */
     .starters-bar {
       padding: 8px 10px;
       background: #14161a;
@@ -119,7 +117,6 @@
       flex-shrink: 0;
     }
 
-    /* Chat Area (背景画像と透過レイヤー) */
     .chat-box {
       flex: 1;
       padding: 14px;
@@ -132,7 +129,6 @@
       background-position: center;
       background-repeat: no-repeat;
     }
-    /* 背景画像を暗くして可読性を保つオーバーレイ */
     .chat-box::before {
       content: "";
       position: absolute;
@@ -196,7 +192,6 @@
       opacity: 0.9;
     }
 
-    /* Controls Area */
     .controls {
       padding: 10px 14px;
       background: #131417;
@@ -280,7 +275,6 @@
       color: var(--text-sub);
     }
 
-    /* Modal Styles */
     .modal {
       display: none;
       position: fixed;
@@ -305,16 +299,36 @@
       color: white;
     }
     .modal-content h2 { margin-top: 0; font-size: 1.1rem; color: var(--accent-gold); }
-    .form-group { margin-bottom: 12px; }
-    .form-group label { display: block; font-size: 0.78rem; color: var(--text-sub); margin-bottom: 4px; }
-    .form-group input[type="text"], .form-group input[type="password"] {
+    .section-title {
+      font-size: 0.85rem;
+      color: var(--accent-gold);
+      margin: 14px 0 6px;
+      font-weight: bold;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 3px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .test-voice-btn {
+      background: #2a2e38;
+      border: 1px solid var(--accent-gold);
+      color: var(--accent-gold);
+      border-radius: 12px;
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      cursor: pointer;
+    }
+    .form-group { margin-bottom: 10px; }
+    .form-group label { display: block; font-size: 0.76rem; color: var(--text-sub); margin-bottom: 3px; }
+    .form-group input[type="text"], .form-group input[type="password"], .form-group select {
       width: 100%;
       padding: 8px;
       border-radius: 6px;
       background: #282c35;
       border: 1px solid #3c424f;
       color: white;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
     }
     .slider-val { float: right; color: var(--accent-gold); font-weight: bold; }
     .close-modal-btn {
@@ -355,7 +369,6 @@
 <body>
 
 <div class="container">
-  <!-- Header -->
   <div class="header">
     <div class="profile-group">
       <div class="avatar-wrapper">
@@ -372,7 +385,6 @@
     </div>
   </div>
 
-  <!-- Starters Bar -->
   <div class="starters-bar">
     <button class="starter-chip" data-text="Let's practice my 30-second self-introduction for the workshop.">👋 30秒自己紹介の練習</button>
     <button class="starter-chip" data-text="I'm so nervous about speaking English. What should I do first?">😰 英語が怖くて緊張する</button>
@@ -380,10 +392,8 @@
     <button class="starter-chip" data-text="What is a good phrase to start a conversation during coffee break?">☕ 休憩時間の雑談フレーズ</button>
   </div>
 
-  <!-- Chat Log (背景画像表示領域) -->
   <div class="chat-box" id="chatBox"></div>
 
-  <!-- Controls Area -->
   <div class="controls">
     <div class="input-mode-toggle">
       <label><input type="radio" name="langMode" value="en-US" checked> 英語モード (en-US)</label>
@@ -401,28 +411,55 @@
 <!-- Settings Modal -->
 <div class="modal" id="settingsModal">
   <div class="modal-content">
-    <h2>⚙️ 環境・表示設定</h2>
+    <h2>⚙️ 環境・表示・音声設定</h2>
+    
     <div class="form-group">
       <label>OpenAI API Key (sk-...)</label>
       <input type="password" id="apiKeyInput" placeholder="sk-...">
     </div>
     
-    <!-- チャット背景画像設定 -->
     <div class="form-group">
       <label>チャット背景画像URL</label>
-      <input type="text" id="bgUrlInput" placeholder="https://...（推しのお気に入り画像リンク）">
+      <input type="text" id="bgUrlInput" placeholder="https://...">
     </div>
 
-    <!-- 音声チューニング -->
-    <div class="form-group">
-      <label>声のピッチ（低音）: <span class="slider-val" id="pitchDisp">0.55</span></label>
-      <input type="range" id="pitchInput" min="0.4" max="1.2" step="0.05" value="0.55" style="width:100%;">
+    <!-- 英語 音声設定 -->
+    <div class="section-title">
+      <span>🇺🇸 英語 音声設定</span>
+      <button class="test-voice-btn" id="testEnBtn">▶ 試聴する</button>
     </div>
     <div class="form-group">
-      <label>話すスピード: <span class="slider-val" id="rateDisp">0.85</span></label>
-      <input type="range" id="rateInput" min="0.6" max="1.3" step="0.05" value="0.85" style="width:100%;">
+      <label>使用する声（この端末の内蔵Voice）:</label>
+      <select id="voiceEnSelect"></select>
+    </div>
+    <div class="form-group">
+      <label>英語ピッチ: <span class="slider-val" id="pitchEnDisp">0.55</span></label>
+      <input type="range" id="pitchEnInput" min="0.4" max="1.2" step="0.05" value="0.55" style="width:100%;">
+    </div>
+    <div class="form-group">
+      <label>英語スピード: <span class="slider-val" id="rateEnDisp">0.85</span></label>
+      <input type="range" id="rateEnInput" min="0.6" max="1.3" step="0.05" value="0.85" style="width:100%;">
     </div>
 
+    <!-- 日本語 音声設定 -->
+    <div class="section-title">
+      <span>🇯🇵 日本語 音声設定</span>
+      <button class="test-voice-btn" id="testJaBtn">▶ 試聴する</button>
+    </div>
+    <div class="form-group">
+      <label>使用する声（この端末の内蔵Voice）:</label>
+      <select id="voiceJaSelect"></select>
+    </div>
+    <div class="form-group">
+      <label>日本語ピッチ: <span class="slider-val" id="pitchJaDisp">0.75</span></label>
+      <input type="range" id="pitchJaInput" min="0.4" max="1.3" step="0.05" value="0.75" style="width:100%;">
+    </div>
+    <div class="form-group">
+      <label>日本語スピード: <span class="slider-val" id="rateJaDisp">0.90</span></label>
+      <input type="range" id="rateJaInput" min="0.6" max="1.3" step="0.05" value="0.90" style="width:100%;">
+    </div>
+
+    <div class="section-title"><span>🖼️ アイコン・マイルストーン</span></div>
     <div class="form-group">
       <label>メインアイコン画像URL</label>
       <input type="text" id="avatarUrlInput" placeholder="https://...">
@@ -440,7 +477,6 @@
   </div>
 </div>
 
-<!-- Reward Gallery Modal -->
 <div class="modal" id="galleryModal">
   <div class="modal-content">
     <h2>🏆 継続のご褒美ギャラリー</h2>
@@ -450,7 +486,6 @@
   </div>
 </div>
 
-<!-- Milestone Celebration Modal -->
 <div class="modal" id="milestoneModal">
   <div class="modal-content" style="text-align:center;">
     <h2 id="milestoneTitle">🎉 MILESTONE UNLOCKED!</h2>
@@ -485,11 +520,9 @@ CRITICAL RULES:
     content: "Hey. Glad we're here in Silicon Valley together. Don't worry if your English feels rough—just speak with passion. What should we do first?"
   };
 
-  // State
   let conversationHistory = [];
   let studyData = { dates: [], streak: 1, lastActiveDate: "" };
 
-  // Elements
   const chatBox = document.getElementById('chatBox');
   const textInput = document.getElementById('textInput');
   const sendBtn = document.getElementById('sendBtn');
@@ -500,30 +533,90 @@ CRITICAL RULES:
 
   const apiKeyInput = document.getElementById('apiKeyInput');
   const bgUrlInput = document.getElementById('bgUrlInput');
-  const pitchInput = document.getElementById('pitchInput');
-  const rateInput = document.getElementById('rateInput');
-  const pitchDisp = document.getElementById('pitchDisp');
-  const rateDisp = document.getElementById('rateDisp');
   const avatarUrlInput = document.getElementById('avatarUrlInput');
   const reward3Input = document.getElementById('reward3Input');
   const reward7Input = document.getElementById('reward7Input');
 
-  // Load Settings
+  const voiceEnSelect = document.getElementById('voiceEnSelect');
+  const pitchEnInput = document.getElementById('pitchEnInput');
+  const rateEnInput = document.getElementById('rateEnInput');
+  const pitchEnDisp = document.getElementById('pitchEnDisp');
+  const rateEnDisp = document.getElementById('rateEnDisp');
+
+  const voiceJaSelect = document.getElementById('voiceJaSelect');
+  const pitchJaInput = document.getElementById('pitchJaInput');
+  const rateJaInput = document.getElementById('rateJaInput');
+  const pitchJaDisp = document.getElementById('pitchJaDisp');
+  const rateJaDisp = document.getElementById('rateJaDisp');
+
+  let allVoices = [];
+
+  // 音声一覧の取得とプルダウン構築
+  function populateVoiceList() {
+    if (!('speechSynthesis' in window)) return;
+    allVoices = window.speechSynthesis.getVoices();
+    if (allVoices.length === 0) return;
+
+    const savedVoiceEn = localStorage.getItem('ren_voice_en_uri');
+    const savedVoiceJa = localStorage.getItem('ren_voice_ja_uri');
+
+    // 英語音声を抽出
+    const enVoices = allVoices.filter(v => v.lang.startsWith('en'));
+    voiceEnSelect.innerHTML = '';
+    enVoices.forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = v.voiceURI;
+      opt.textContent = `${v.name} (${v.lang})`;
+      if (savedVoiceEn && v.voiceURI === savedVoiceEn) {
+        opt.selected = true;
+      } else if (!savedVoiceEn && (v.name.includes('Male') || v.name.includes('David') || v.name.includes('Arthur') || v.name.includes('Daniel') || v.name.includes('Aaron'))) {
+        opt.selected = true;
+      }
+      voiceEnSelect.appendChild(opt);
+    });
+
+    // 日本語音声を抽出
+    const jaVoices = allVoices.filter(v => v.lang.startsWith('ja'));
+    voiceJaSelect.innerHTML = '';
+    jaVoices.forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = v.voiceURI;
+      opt.textContent = `${v.name} (${v.lang})`;
+      if (savedVoiceJa && v.voiceURI === savedVoiceJa) {
+        opt.selected = true;
+      } else if (!savedVoiceJa && (v.name.includes('Male') || v.name.includes('Ichiro') || v.name.includes('Otoya') || v.name.includes('Kenji'))) {
+        opt.selected = true;
+      }
+      voiceJaSelect.appendChild(opt);
+    });
+  }
+
   function loadSettings() {
     apiKeyInput.value = localStorage.getItem('openai_api_key') || '';
     avatarUrlInput.value = localStorage.getItem('ren_avatar_url') || 'https://ogre.natalie.mu/media/news/music/2026/0527/Precious_meguro02.jpg?imwidth=1460&imdensity=1&impolicy=hq';
     reward3Input.value = localStorage.getItem('reward_img_3') || 'https://ogre.natalie.mu/media/news/music/2026/0526/kikkoman_meguro01.jpg?imwidth=1460&imdensity=1&impolicy=hq';
     reward7Input.value = localStorage.getItem('reward_img_7') || 'https://ogre.natalie.mu/media/news/music/2026/0517/kirin_cm02.jpg?imwidth=1460&imdensity=1&impolicy=hq';
 
-    const savedPitch = localStorage.getItem('ren_pitch') || '0.55';
-    const savedRate = localStorage.getItem('ren_rate') || '0.85';
-    pitchInput.value = savedPitch;
-    rateInput.value = savedRate;
-    pitchDisp.textContent = savedPitch;
-    rateDisp.textContent = savedRate;
+    // モバイル端末検出による初期値分岐
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const defaultPitchEn = isMobile ? '0.70' : '0.55'; // スマホはピッチが下がりすぎると籠もるため0.70を推奨
+    const defaultPitchJa = isMobile ? '0.80' : '0.75';
 
-    // 背景画像のロードと反映
-    const savedBg = localStorage.getItem('ren_bg_url') || 'https://ogre.natalie.mu/media/news/music/2025/0717/FENDI_25AW_2.jpg?imwidth=1460&imdensity=1&impolicy=hq';
+    const savedPitchEn = localStorage.getItem('ren_pitch_en') || defaultPitchEn;
+    const savedRateEn = localStorage.getItem('ren_rate_en') || '0.85';
+    pitchEnInput.value = savedPitchEn;
+    rateEnInput.value = savedRateEn;
+    pitchEnDisp.textContent = savedPitchEn;
+    rateEnDisp.textContent = savedRateEn;
+
+    const savedPitchJa = localStorage.getItem('ren_pitch_ja') || defaultPitchJa;
+    const savedRateJa = localStorage.getItem('ren_rate_ja') || '0.90';
+    pitchJaInput.value = savedPitchJa;
+    rateJaInput.value = savedRateJa;
+    pitchJaDisp.textContent = savedPitchJa;
+    rateJaDisp.textContent = savedRateJa;
+
+    const savedBg = localStorage.getItem('ren_bg_url') || 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800';
     bgUrlInput.value = savedBg;
     applyBackground(savedBg);
 
@@ -538,6 +631,8 @@ CRITICAL RULES:
     } else {
       conversationHistory = [DEFAULT_GREETING];
     }
+
+    populateVoiceList();
   }
 
   function applyBackground(url) {
@@ -554,17 +649,84 @@ CRITICAL RULES:
     localStorage.setItem('ren_bg_url', bgUrlInput.value.trim());
     localStorage.setItem('reward_img_3', reward3Input.value.trim());
     localStorage.setItem('reward_img_7', reward7Input.value.trim());
-    localStorage.setItem('ren_pitch', pitchInput.value);
-    localStorage.setItem('ren_rate', rateInput.value);
+
+    // 音声パラメータと選択VoiceURIを保存
+    localStorage.setItem('ren_pitch_en', pitchEnInput.value);
+    localStorage.setItem('ren_rate_en', rateEnInput.value);
+    localStorage.setItem('ren_voice_en_uri', voiceEnSelect.value);
+
+    localStorage.setItem('ren_pitch_ja', pitchJaInput.value);
+    localStorage.setItem('ren_rate_ja', rateJaInput.value);
+    localStorage.setItem('ren_voice_ja_uri', voiceJaSelect.value);
 
     applyBackground(bgUrlInput.value.trim());
     if (avatarUrlInput.value.trim()) avatarImg.src = avatarUrlInput.value.trim();
   }
 
-  pitchInput.oninput = () => pitchDisp.textContent = pitchInput.value;
-  rateInput.oninput = () => rateDisp.textContent = rateInput.value;
+  pitchEnInput.oninput = () => pitchEnDisp.textContent = pitchEnInput.value;
+  rateEnInput.oninput = () => rateEnDisp.textContent = rateEnInput.value;
+  pitchJaInput.oninput = () => pitchJaDisp.textContent = pitchJaInput.value;
+  rateJaInput.oninput = () => rateJaDisp.textContent = rateJaInput.value;
 
-  // Streak
+  // 設定モーダル内のテスト試聴ボタン
+  document.getElementById('testEnBtn').onclick = () => {
+    speakDirect(
+      "Hey. Let’s do our best together in Silicon Valley.",
+      'en-US',
+      voiceEnSelect.value,
+      parseFloat(pitchEnInput.value),
+      parseFloat(rateEnInput.value)
+    );
+  };
+
+  document.getElementById('testJaBtn').onclick = () => {
+    speakDirect(
+      "焦らなくて大丈夫だよ。ゆっくり自分のペースでいこう。",
+      'ja-JP',
+      voiceJaSelect.value,
+      parseFloat(pitchJaInput.value),
+      parseFloat(rateJaInput.value)
+    );
+  };
+
+  function speakDirect(text, lang, voiceUri, pitch, rate) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang;
+    u.pitch = pitch;
+    u.rate = rate;
+
+    if (voiceUri && allVoices.length > 0) {
+      const selectedVoice = allVoices.find(v => v.voiceURI === voiceUri);
+      if (selectedVoice) u.voice = selectedVoice;
+    }
+    window.speechSynthesis.speak(u);
+  }
+
+  function speakLikeRen(text) {
+    if (!('speechSynthesis' in window)) return;
+    const isJapanese = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff]/.test(text);
+    
+    if (isJapanese) {
+      speakDirect(
+        text,
+        'ja-JP',
+        localStorage.getItem('ren_voice_ja_uri') || voiceJaSelect.value,
+        parseFloat(pitchJaInput.value || 0.75),
+        parseFloat(rateJaInput.value || 0.90)
+      );
+    } else {
+      speakDirect(
+        text,
+        'en-US',
+        localStorage.getItem('ren_voice_en_uri') || voiceEnSelect.value,
+        parseFloat(pitchEnInput.value || 0.55),
+        parseFloat(rateEnInput.value || 0.85)
+      );
+    }
+  }
+
   function updateStreak() {
     const today = new Date().toISOString().slice(0, 10);
     if (!studyData.dates.includes(today)) {
@@ -592,7 +754,7 @@ CRITICAL RULES:
         img: reward3Input.value
       },
       7: {
-        title: "✨ 1週間継続達成！",
+        title: "✨ 1週間連続達成！",
         msg: "「1週間！本気で尊敬する。シリコンバレーに行く準備、ちゃんと前に進んでるよ。失敗を恐れずに堂々と話す姿、想像できてる。」",
         img: reward7Input.value
       }
@@ -607,7 +769,6 @@ CRITICAL RULES:
     }
   }
 
-  // Render
   function renderChat() {
     chatBox.innerHTML = '';
     conversationHistory.forEach((msg, idx) => {
@@ -640,7 +801,6 @@ CRITICAL RULES:
     }
   };
 
-  // OpenAI Call
   async function callAI(userText) {
     const key = apiKeyInput.value.trim();
     if (!key) {
@@ -690,29 +850,6 @@ CRITICAL RULES:
     }
   }
 
-  // 音声合成
-  function speakLikeRen(text) {
-    if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
-
-    const isJapanese = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff]/.test(text);
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = isJapanese ? 'ja-JP' : 'en-US';
-    
-    utterance.pitch = parseFloat(pitchInput.value || 0.55);
-    utterance.rate = parseFloat(rateInput.value || 0.85);
-
-    const voices = window.speechSynthesis.getVoices();
-    const targetVoice = voices.find(v => 
-      v.lang.includes(isJapanese ? 'ja' : 'en') && 
-      (v.name.includes('Male') || v.name.includes('David') || v.name.includes('Natural') || v.name.includes('Ichiro'))
-    ) || voices.find(v => v.lang.includes(isJapanese ? 'ja' : 'en'));
-
-    if (targetVoice) utterance.voice = targetVoice;
-    window.speechSynthesis.speak(utterance);
-  }
-
-  // 送信イベント
   function handleSend() {
     const text = textInput.value.trim();
     if (text) {
@@ -726,7 +863,6 @@ CRITICAL RULES:
     if (e.key === 'Enter') handleSend();
   };
 
-  // 音声認識
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   let recognition;
   let isRecording = false;
@@ -774,17 +910,18 @@ CRITICAL RULES:
     }
   };
 
-  // スターターチップ
   document.querySelectorAll('.starter-chip').forEach(chip => {
     chip.onclick = () => callAI(chip.getAttribute('data-text'));
   });
 
-  // Modal handlers
   const settingsModal = document.getElementById('settingsModal');
   const galleryModal = document.getElementById('galleryModal');
   const milestoneModal = document.getElementById('milestoneModal');
 
-  document.getElementById('settingsBtn').onclick = () => settingsModal.classList.add('active');
+  document.getElementById('settingsBtn').onclick = () => {
+    populateVoiceList();
+    settingsModal.classList.add('active');
+  };
   document.getElementById('closeSettingsBtn').onclick = () => {
     saveSettings();
     settingsModal.classList.remove('active');
@@ -822,12 +959,13 @@ CRITICAL RULES:
     }).join('');
   }
 
-  // 初期化実行
   loadSettings();
   renderChat();
   streakBadge.textContent = `🔥 継続: ${studyData.streak} 日目`;
   if ('speechSynthesis' in window) {
-    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = () => {
+      populateVoiceList();
+    };
   }
 </script>
 </body>
